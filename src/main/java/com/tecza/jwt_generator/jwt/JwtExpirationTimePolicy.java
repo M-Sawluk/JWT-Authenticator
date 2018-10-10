@@ -8,8 +8,8 @@ public class JwtExpirationTimePolicy {
     private static final Map<String, Integer> TOKEN_EXPIRATION_TIME_POLICY = new HashMap<>();
 
     static {
-        TOKEN_EXPIRATION_TIME_POLICY.put(UserAgents.ANDROID, ExpirationLength.BROWSER_15MIN);
-        TOKEN_EXPIRATION_TIME_POLICY.put(UserAgents.BROWSER, ExpirationLength.ANDROID_30DAYS);
+        TOKEN_EXPIRATION_TIME_POLICY.put(UserAgents.ANDROID, ExpirationLength.ANDROID_30DAYS);
+        TOKEN_EXPIRATION_TIME_POLICY.put(UserAgents.BROWSER, ExpirationLength.BROWSER_15MIN);
     }
     private JwtExpirationTimePolicy() {}
 

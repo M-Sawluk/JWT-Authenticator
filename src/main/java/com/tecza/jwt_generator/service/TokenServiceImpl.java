@@ -13,8 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.*;
 
 @Service
 public class TokenServiceImpl implements TokenService {
@@ -22,7 +21,7 @@ public class TokenServiceImpl implements TokenService {
     private UserRepository userRepository;
 
     @Override
-    public TokenResponse createResponse(String email, String password, String userAgent, UriComponentsBuilder ucb) throws URISyntaxException {
+    public TokenResponse createResponse(String email, String password, String userAgent, UriComponentsBuilder ucb) throws URISyntaxException, UnknownHostException {
         User user = userRepository.findByEmail(email);
         HttpHeaders httpHeaders = new HttpHeaders();
         boolean passwordCorrect = isPasswordCorrect(user, password);
@@ -34,7 +33,7 @@ public class TokenServiceImpl implements TokenService {
         }
 
         String roleName = user.getRole().getRoleName();
-        httpHeaders.setLocation(new URI("http://ec2-35-180-42-91.eu-west-3.compute.amazonaws.com:8080/tecza/" + roleName));
+        httpHeaders.setLocation(new URI("http://" + InetAddress.getLocalHost().getHostAddress() + ":8080/tecza/" + roleName));
 
         String token = JwtUtils.createToken(user, userAgent);
 

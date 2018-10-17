@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URISyntaxException;
 import java.security.NoSuchAlgorithmException;
 
 @RestController
@@ -20,7 +21,7 @@ public class TokenController {
 
     @PostMapping
     public ResponseEntity<TokenHolder> generateToken(@RequestBody TokenRequest tokenRequest,
-                                                     @RequestHeader("User-Agent") String userAgent, UriComponentsBuilder ucb) {
+                                                     @RequestHeader("User-Agent") String userAgent, UriComponentsBuilder ucb) throws URISyntaxException {
         TokenResponse response = tokenService.createResponse(tokenRequest.getEmail(), tokenRequest.getPassword(), userAgent, ucb);
 
         return new ResponseEntity<>(response.getTokenHolder(), response.getHttpHeaders(),  response.getHttpStatus());

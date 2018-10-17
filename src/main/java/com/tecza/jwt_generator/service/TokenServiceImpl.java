@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
 @Service
 public class TokenServiceImpl implements TokenService {
@@ -21,19 +22,19 @@ public class TokenServiceImpl implements TokenService {
     private UserRepository userRepository;
 
     @Override
-    public TokenResponse createResponse(String email, String password, String userAgent, UriComponentsBuilder ucb) {
+    public TokenResponse createResponse(String email, String password, String userAgent, UriComponentsBuilder ucb) throws URISyntaxException {
         User user = userRepository.findByEmail(email);
         HttpHeaders httpHeaders = new HttpHeaders();
         boolean passwordCorrect = isPasswordCorrect(user, password);
 
         if(!passwordCorrect) {
             httpHeaders.setLocation(ucb.path("/accessDenied").build().toUri());
+            httpHeaders.set("message", "Zły email lub hasło");
             return new TokenResponse(new TokenHolder(""), httpHeaders, HttpStatus.NOT_FOUND);
         }
 
         String roleName = user.getRole().getRoleName();
-        URI location = ucb.path("/{role}").buildAndExpand(roleName.toLowerCase()).toUri();
-        httpHeaders.setLocation(location);
+        httpHeaders.setLocation(new URI("http://ec2-35-180-42-91.eu-west-3.compute.amazonaws.com:8080/tecza/" + roleName));
 
         String token = JwtUtils.createToken(user, userAgent);
 

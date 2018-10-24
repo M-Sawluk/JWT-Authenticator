@@ -29,7 +29,7 @@ public class TokenServiceImpl implements TokenService {
         if(!passwordCorrect) {
             httpHeaders.setLocation(ucb.path("/accessDenied").build().toUri());
             httpHeaders.set("message", "Zły email lub hasło");
-            return new TokenResponse(new TokenHolder(""), httpHeaders, HttpStatus.NOT_FOUND);
+            return new TokenResponse(new TokenHolder("", ""), httpHeaders, HttpStatus.NOT_FOUND);
         }
 
         String roleName = user.getRole().getRoleName();
@@ -37,7 +37,7 @@ public class TokenServiceImpl implements TokenService {
 
         String token = JwtUtils.createToken(user, userAgent);
 
-        return new TokenResponse(new TokenHolder(token), httpHeaders, HttpStatus.OK);
+        return new TokenResponse(new TokenHolder(token, roleName), httpHeaders, HttpStatus.OK);
     }
 
     private boolean isPasswordCorrect(User user, String password) {

@@ -7,4 +7,5 @@ import lombok.Data;
 @Data
 public class TokenHolder {
     private final String TOKEN;
+    private final String ROLE;
 }
